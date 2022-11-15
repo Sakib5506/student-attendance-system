@@ -1,26 +1,27 @@
-import React from "react";
+import {useContext} from 'react'
+import {StudentContext} from '../contexts/Student'
 
-function AllStudentList(props) {
-
+function AllStudentList() {
+    const studentCtx = useContext(StudentContext);
     const deleteHandler = (studentId) =>{
-        props.setAllStudentList(props.allStudentList.filter((student) => student.id !== studentId))
+        studentCtx.setAllStudentList(studentCtx.allStudentList.filter((student) => student.id !== studentId))
     }
 
     const editHandler = (studentId) =>{
-        const tobeEdited = props.allStudentList.find((student) => student.id === studentId);
-        props.setEditMode(true);
-        props.setEditable(tobeEdited);
-        props.setStudentName(tobeEdited.name);
+        const tobeEdited = studentCtx.allStudentList.find((student) => student.id === studentId);
+        studentCtx.setEditMode(true);
+        studentCtx.setEditable(tobeEdited);
+        studentCtx.setStudentName(tobeEdited.name);
     }
 
     const presentHandler = (studentId) =>{
-        const item = props.allStudentList.find((student) => student.id === studentId);
+        const item = studentCtx.allStudentList.find((student) => student.id === studentId);
         if(item.isPresent === true){
             alert('This student already in the present list');
         }else if(item.isPresent === false){
             alert('This student already in the absent list');
         }else if(item.isPresent === undefined){
-            props.setAllStudentList(props.allStudentList.map((person) =>{
+            studentCtx.setAllStudentList(studentCtx.allStudentList.map((person) =>{
                 if(person.id === studentId){
                     person.isPresent = true;
                 }
@@ -30,13 +31,13 @@ function AllStudentList(props) {
     }
 
     const absentHandler = (studentId) =>{
-        const item = props.allStudentList.find((student) => student.id === studentId);
+        const item = studentCtx.allStudentList.find((student) => student.id === studentId);
         if(item.isPresent === true){
             alert('This student already in the present list');
         }else if(item.isPresent === false){
             alert('This student already in the absent list');
         }else if(item.isPresent === undefined){
-            props.setAllStudentList(props.allStudentList.map((person) =>{
+            studentCtx.setAllStudentList(studentCtx.allStudentList.map((person) =>{
                 if(person.id === studentId){
                     person.isPresent = false;
                 }
@@ -51,7 +52,7 @@ function AllStudentList(props) {
             style={{ border: "1px solid black", margin: "20px", padding: "10px" }}
         >
             <h2>All Student list</h2>
-            {props.allStudentList.map((student) => (
+            {studentCtx.allStudentList.map((student) => (
                 <li>
                     <span>{student.name}</span>
                     <button onClick={() => editHandler(student.id)}>Edit</button>

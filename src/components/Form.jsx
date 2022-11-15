@@ -1,16 +1,19 @@
 import React from 'react'
+import {useContext} from 'react'
+import {StudentContext} from '../contexts/Student'
 
-function Form(props) {
+function Form() {
+    const studentCtx = useContext(StudentContext)
     const studentCreateHandler = (event) =>{
         event.preventDefault();
-        if(props.studentName){
+        if(studentCtx.studentName){
             const newStudent = {
                 id: Date.now(),
-                name: props.studentName,
+                name: studentCtx.studentName,
                 isPresent: undefined
             }
-            props.setAllStudentList([newStudent, ...props.allStudentList]);
-            props.setStudentName('');
+            studentCtx.setAllStudentList([newStudent, ...studentCtx.allStudentList]);
+            studentCtx.setStudentName('');
         }else{
             alert('Please fill the input field');
         }
@@ -18,25 +21,25 @@ function Form(props) {
 
     const updateHandler = (event) => {
         event.preventDefault();
-        if(props.studentName){
-            props.setAllStudentList(props.allStudentList.map((student) =>{
-                if(student.id === props.editable.id){
-                    student.name = props.studentName;
+        if(studentCtx.studentName){
+            studentCtx.setAllStudentList(studentCtx.allStudentList.map((student) =>{
+                if(student.id === studentCtx.editable.id){
+                    student.name = studentCtx.studentName;
                 }
                 return student;
             }))
-            props.setEditMode(false);
-            props.setEditable(null);
-            props.setStudentName('');
+            studentCtx.setEditMode(false);
+            studentCtx.setEditable(null);
+            studentCtx.setStudentName('');
         }else{
             alert('Please fill the input field');
         }
     }
 
   return (
-    <form action="" onSubmit = {(event) => props.editMode ? updateHandler(event) : studentCreateHandler(event)} style={{textAlign: 'center', margin: '20px'}}>
-            <input type="text" name="" id="" placeholder='Student name' value={props.studentName} onChange={(event) => props.setStudentName(event.target.value)} />
-            <button type='submit'>{props.editMode ? 'Update' : 'Add'}</button>
+    <form action="" onSubmit = {(event) => studentCtx.editMode ? updateHandler(event) : studentCreateHandler(event)} style={{textAlign: 'center', margin: '20px'}}>
+            <input type="text" name="" id="" placeholder='Student name' value={studentCtx.studentName} onChange={(event) => studentCtx.setStudentName(event.target.value)} />
+            <button type='submit'>{studentCtx.editMode ? 'Update' : 'Add'}</button>
         </form>
   )
 }
