@@ -3,43 +3,17 @@ import {useContext} from 'react'
 import {StudentContext} from '../contexts/Student'
 
 function Form() {
-    const studentCtx = useContext(StudentContext)
-    const studentCreateHandler = (event) =>{
-        event.preventDefault();
-        if(studentCtx.studentName){
-            const newStudent = {
-                id: Date.now(),
-                name: studentCtx.studentName,
-                isPresent: undefined
-            }
-            studentCtx.setAllStudentList([newStudent, ...studentCtx.allStudentList]);
-            studentCtx.setStudentName('');
-        }else{
-            alert('Please fill the input field');
-        }
-    }
-
-    const updateHandler = (event) => {
-        event.preventDefault();
-        if(studentCtx.studentName){
-            studentCtx.setAllStudentList(studentCtx.allStudentList.map((student) =>{
-                if(student.id === studentCtx.editable.id){
-                    student.name = studentCtx.studentName;
-                }
-                return student;
-            }))
-            studentCtx.setEditMode(false);
-            studentCtx.setEditable(null);
-            studentCtx.setStudentName('');
-        }else{
-            alert('Please fill the input field');
-        }
-    }
+    const {studentStates, dispatch} = useContext(StudentContext)
+    
 
   return (
-    <form action="" onSubmit = {(event) => studentCtx.editMode ? updateHandler(event) : studentCreateHandler(event)} style={{textAlign: 'center', margin: '20px'}}>
-            <input type="text" name="" id="" placeholder='Student name' value={studentCtx.studentName} onChange={(event) => studentCtx.setStudentName(event.target.value)} />
-            <button type='submit'>{studentCtx.editMode ? 'Update' : 'Add'}</button>
+    <form action="" onSubmit = {(event) => {
+        event.preventDefault();
+        studentStates.editMode ? dispatch({type: 'UPDATE_STUDENT', payload: studentStates.studentName}) : dispatch({type: 'CREATE_STUDENT', payload: studentStates.studentName})
+    }} style={{textAlign: 'center', margin: '20px'}}>
+            <input type="text" name="" id="" placeholder='Student name' value={studentStates.studentName} 
+            onChange={(event) => dispatch({type: 'CHANGE_STUDENT_NAME', payload: event.target.value})} />
+            <button type='submit'>{studentStates.editMode ? 'Update' : 'Add'}</button>
         </form>
   )
 }

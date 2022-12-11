@@ -1,16 +1,20 @@
-import {createContext, useState} from 'react'
+import {createContext, useReducer} from 'react'
+import {studentReducer} from '../reducers/studentReducer'
 
 export const StudentContext = createContext();
 
+const initState = {
+  studentName: '',
+  allStudentList: [],
+  editMode: false,
+  editable: null
+}
 
 function StudentProvider({children}) {
-    const [studentName, setStudentName] = useState('');
-    const [allStudentList, setAllStudentList] = useState([]);
-    const [editMode, setEditMode] = useState(false);
-    const [editable, setEditable] = useState(null);
+    const [studentStates, dispatch] = useReducer(studentReducer, initState);
 
   return (
-    <StudentContext.Provider value = {{studentName, setStudentName, allStudentList, setAllStudentList, editMode, setEditMode, editable, setEditable}}>
+    <StudentContext.Provider value = {{studentStates, dispatch}}>
         {children}
     </StudentContext.Provider>
   )
